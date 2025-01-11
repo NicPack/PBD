@@ -1,3 +1,74 @@
+# Indexy
+
+## Indeksy do szybkiego wyszukiwania
+
+### Wyszukiwanie kursów po nazwie
+```sql
+-- dbo.courses
+CREATE INDEX idx_courses_name ON dbo.courses(name);
+```
+
+### Wyszukiwanie modułów po nazwie
+```sql
+-- dbo.modules
+CREATE INDEX idx_modules_name ON dbo.modules(name);
+```
+
+### Wyszukiwanie kierunków po nazwie
+```sql
+-- dbo.studies
+CREATE INDEX idx_courses_name ON dbo.studies(name);
+```
+### Wyszukiwanie webinarów po nazwie
+```sql
+-- dbo.webinars
+CREATE INDEX idx_courses_name ON dbo.webinars(name);
+```
+
+## Złożone indeksy dla filtrów wielokolumnowych
+
+### Sprawdzanie liczby uczniów na danych zajęciach w konkretnym dniu
+```sql
+-- dbo.class_attendance
+CREATE INDEX idx_class_attendance_class_id_date_user_id ON dbo.class_attendance(class_id, date, student_id);
+```
+### Sprawdzanie czy student jest zapisany na dany kurs
+```sql
+-- dbo.course_enrollment
+CREATE INDEX idx_course_enrollment_course_id_user_id ON dbo.course_enrollment(course_id, user_id);
+```
+### Sprawdzanie liczby uczniów na module kursu w konkretnym dniu
+```sql
+-- dbo.module_attendance
+CREATE INDEX idx_module_attendance_course_module_id_student_id_date ON dbo.module_attendance(course_module_id , student_id, date);
+```
+
+### Sprawdzanie czy student jest zapisany na dany przedmiot
+```sql
+-- dbo.study_enrollment
+CREATE INDEX idx_study_enrollment_study_id_user_id ON dbo.study_enrollment(study_id, user_id);
+```
+
+### Wyszukanie numeru indeksu po imieniu i nazwisku
+```sql
+-- dbo.users
+CREATE INDEX idx_users_first_name_last_name ON dbo.users(firstname, lastname);
+```
+
+## Indeksy do szybszego joinowania
+
+### Koszyka zakupowego
+```sql
+-- dbo.shopping_carts
+CREATE INDEX idx_shopping_carts_cart_id ON dbo.shopping_carts(cart_id);
+```
+
+### Produktów
+```sql
+-- dbo.products
+CREATE INDEX idx__products_product_id ON dbo.products(product_id);
+```
+
 ## Indeksy na kluczach obcych
 
 
