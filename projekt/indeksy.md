@@ -134,9 +134,5 @@ CREATE INDEX idx_users_role_id ON dbo.users(role_id);
 -- dbo.webinars
 CREATE INDEX idx_webinars_webinar_id ON dbo.webinars(webinar_id);
 CREATE INDEX idx_webinars_product_id ON dbo.webinars(product_id);
-```
-### Tabela webinars_recordings
-```sql
--- dbo.webinars_recordings
-CREATE INDEX idx_webinars_recordings_recording_id ON dbo.webinars_recordings(recording_id);
+CREATE INDEX idx_webinars_recording_id ON dbo.webinars(recording_id);
 ```
