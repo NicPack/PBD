@@ -5,24 +5,55 @@
 
 ```sql
 CREATE PROCEDURE AddOrder
-    @user_id INT,
     @cart_id INT
 AS
 BEGIN
-    -- Stworzenie zmiennej do przechowania wartosci zamowienia
-    DECLARE @total_value INT;
+    -- Declare variables
+    DECLARE @user_id INT;
+    DECLARE @product_id INT;
+    DECLARE @quantity INT;
+    DECLARE @price DECIMAL(10, 2);
+    DECLARE @value DECIMAL(10, 2);
 
-    -- Obliczenie wartosci zamowienia
-    SELECT @total_value = SUM(price * quantity)
+    -- Get the user_id for the given cart_id
+    SELECT @user_id = user_id
+    FROM shopping_carts
+    WHERE cart_id = @cart_id;
+
+    -- Cursor to iterate through each product in the cart
+    DECLARE cart_cursor CURSOR FOR
+    SELECT product_id, quantity
     FROM shopping_carts_products
     WHERE cart_id = @cart_id;
 
-    -- Insert do tabeli invoices
-    INSERT INTO invoices (currency, value, exchange_rate, is_exempted, user_id)
-    VALUES ('PLN', @total_value, 1, 0, @user_id);
+    -- Open the cursor
+    OPEN cart_cursor;
 
-    -- Zwroc id nowej faktury
-    SELECT SCOPE_IDENTITY() AS invoice_id;
+    FETCH NEXT FROM cart_cursor INTO @product_id, @quantity;
+
+    -- Iterate through each product in the cart
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        -- Get the price of the current product
+        SELECT @price = price
+        FROM products
+        WHERE product_id = @product_id;
+
+        -- Calculate the total value for the product
+        SET @value = @price * @quantity;
+
+        -- Insert a new invoice for the current product
+        INSERT INTO invoices (currency, value, exchange_rate, is_exempted, user_id, payment_deadline, product_id, payment_link, is_paid)
+        VALUES ('PLN', @value, 1, 0, @user_id, GETDATE() + DAY(14), @product_id,CONCAT('www.onlinepayments.com/bestuniever/' , STR(@cart_id), '/', STR(@user_id)), 0 );
+
+        -- Fetch the next product
+        FETCH NEXT FROM cart_cursor INTO @product_id, @quantity;
+    END;
+
+    -- Close and deallocate the cursor
+    CLOSE cart_cursor;
+    DEALLOCATE cart_cursor;
+
 END;
 
 ```
