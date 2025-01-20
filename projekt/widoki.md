@@ -115,11 +115,6 @@ INNER JOIN study_subject_attendance ssa on study_subject_classes.study_subject_c
 INNER JOIN users on ssa.user_id = users.user_id
 WHERE end_time < GETDATE()
 GROUP BY ssa.user_id, ss.study_subject_id
-
-select count(*)
-from course_modules
-inner join module_attendance on course_modules.course_module_id = module_attendance.course_module_id
-where module_attendance.student_id = 3
 ```
 
 ## Lista obecności dla każdego szkolenia z datą, imieniem, nazwiskiem i informacją czy uczestnik był obecny, czy nie.
